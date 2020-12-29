@@ -1,0 +1,17 @@
+# Ignore everything
+*
+
+# Don't ignore these
+!*/
+!/readme.md
+!/.gitignore
+
+!Server/src/**/*.cpp
+!Server/includes/**/*.h
+!Server/config.ini
+!Server/**/*.mp3
+
+!Client/include/**/*.h
+!Client/src/**/*.cpp
+!Client/config.ini
+!Client/**/*.mp3
