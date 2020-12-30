@@ -9,6 +9,11 @@ ScreenSwitcher is a portable, easy-to-use application that allows one or more PC
 
 See this program in action live by following our Twitch channel at [twitch.tv/4FeetApart](https://www.twitch.tv/4feetapart).
 
+# How to Run
+
+  - Update your sounds and config file in the Client/Client and Server/Server directory.
+  - Run the Server/Run-Release.bat on your streamer PC and the Client/Run-Release.bat on your other PC.
+
 # New Features!
 
   - Play sounds after a configured delay (TRANSITIONPOINT in config.ini).

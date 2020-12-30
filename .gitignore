@@ -10,10 +10,12 @@
 !Server/includes/**/*.h
 !Server/config.ini
 !Server/Server/*.*
-!Server/Server/Server.exe
+!Server/Run-Release.bat
+!Server/Server/Release/Server.exe
 
 !Client/include/**/*.h
 !Client/src/**/*.cpp
 !Client/config.ini
 !Client/Client/*.*
-!Client/Client/Client.exe
+!Client/Run-Release.bat
+!Client/Client/Release/Client.exe
