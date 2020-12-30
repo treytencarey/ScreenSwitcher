@@ -9,11 +9,11 @@
 !Server/src/**/*.cpp
 !Server/includes/**/*.h
 !Server/config.ini
-!Server/**/*.mp3
-!Server/Project1/*.*
+!Server/Server/*.*
+!Server/Server/Server.exe
 
 !Client/include/**/*.h
 !Client/src/**/*.cpp
 !Client/config.ini
-!Client/**/*.mp3
-!Client/Project2/*.*
+!Client/Client/*.*
+!Client/Client/Client.exe

@@ -6,25 +6,43 @@ Client::Client(int sock, int ID)
 		this->ID = ID;
 }
 
-void Client::switchScenePlaySound(string name)
+void playSound(string sound)
 {
+	printf("PLAYING SOUND: %s\n", sound.c_str());
+	mciSendString(("play " + sound).c_str(), NULL, 0, NULL);
+}
+void Client::switchScenePlaySound(string name, bool selfCalled/*=false*/)
+{
+	if (Config::selfSounds == false && selfCalled)
+		return;
+
 	// PLAY SOUND
 	if (currentScene != name)
 	{
-		if (Config::sceneSounds.find("!" + currentScene) != Config::sceneSounds.end())
+		Sleep(Config::transitionPoint);
+		// If config has fromScene->toScene
+		if (Config::sceneSounds.find(currentScene) != Config::sceneSounds.end())
 		{
-			// cout << "PLAYING DISCONNECT SOUND: " << Config::sceneSounds["!" + currentScene] << endl;
-			mciSendString(("play " + Config::sceneSounds["!" + currentScene]).c_str(), NULL, 0, NULL);
+			if (Config::sceneSounds[currentScene].find(name) != Config::sceneSounds[currentScene].end())
+			{
+				playSound(Config::sceneSounds[currentScene][name]);
+			}
+			else if (Config::sceneSounds[currentScene].find("all") != Config::sceneSounds[currentScene].end())
+			{
+				playSound(Config::sceneSounds[currentScene]["all"]);
+			}
 		}
-		else if (Config::sceneSounds.find(name) != Config::sceneSounds.end())
-		{
-			// cout << "PLAYING CONNECT SOUND: " << Config::sceneSounds[name] << endl;
-			mciSendString(("play " + Config::sceneSounds[name]).c_str(), NULL, 0, NULL);
-		}
+		// If config has all->toScene or just toScene
 		else if (Config::sceneSounds.find("all") != Config::sceneSounds.end())
 		{
-			// cout << "PLAYING ALL SOUND: " << Config::sceneSounds["all"] << endl;
-			mciSendString(("play " + Config::sceneSounds["all"]).c_str(), NULL, 0, NULL);
+			if (Config::sceneSounds["all"].find(name) != Config::sceneSounds["all"].end())
+			{
+				playSound(Config::sceneSounds["all"][name]);
+			}
+			else if (Config::sceneSounds["all"].find("all") != Config::sceneSounds["all"].end())
+			{
+				playSound(Config::sceneSounds["all"]["all"]);
+			}
 		}
 	}
 }
@@ -36,11 +54,6 @@ void Client::switchScene(string name)
 		return;
 	}
 	cout << "Changing scene: " << name << endl;
-
-	if (Config::sceneSounds.find("!" + currentScene) == Config::sceneSounds.end()) {
-		this->switchScenePlaySound(name);
-		Sleep(2000);
-	}
 
 	// https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
 	INPUT input;
@@ -67,10 +80,7 @@ void Client::switchScene(string name)
 		SendInput(1, &input, sizeof(INPUT));
 	}
 
-	if (Config::sceneSounds.find("!" + currentScene) != Config::sceneSounds.end()) {
-		Sleep(3000);
-		this->switchScenePlaySound(name);
-	}
+	this->switchScenePlaySound(name);
 
 	this->currentScene = name;
 

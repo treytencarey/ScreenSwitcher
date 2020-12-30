@@ -9,6 +9,7 @@ public:
 	static map<string, string> Parse(vector<string> params);
 
 	static map<string, vector<int>> keyMap;
-	static map<string, string> sceneSounds;
+	static map<string, map<string, string>> sceneSounds;
 	static bool selfSounds;
+	static int transitionPoint;
 };

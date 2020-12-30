@@ -72,22 +72,12 @@ void checkSwitchScene()
 		{
 			cout << "Changing scene: " << it->first << endl;
 
+			if (Server::clients.size())
+				Server::clients[0]->switchScenePlaySound(it->first, true);
 			for (Client* client : Server::clients)
 			{
 				client->sendMessage(it->first);
 				client->sendMessages();
-			}
-
-			// Only the first client needs to trigger a sound to play
-			if (Config::selfSounds && Server::clients.size() > 0)
-			{
-				if (Config::sceneSounds.find("!" + Server::clients[0]->currentScene) != Config::sceneSounds.end())
-					Sleep(3000);
-				Server::clients[0]->switchScenePlaySound(it->first);
-			}
-
-			for (Client* client : Server::clients)
-			{
 				client->currentScene = it->first;
 			}
 		}

@@ -1,8 +1,9 @@
 #include "Config.h"
 
 map<string, vector<int>> Config::keyMap;
-map<string, string> Config::sceneSounds;
+map<string, map<string, string>> Config::sceneSounds; // EXAMPLE: if the config has PLAYSOUND=[Scene1]sound1[Scene1->Scene2]sound2, then this is ["all"]["Scene1"]=sound and ["Scene1"]["Scene2"]=sound2.
 bool Config::selfSounds = false;
+int Config::transitionPoint = 0;
 
 map<string, string> Config::Parse(vector<string> params)
 {
@@ -15,24 +16,34 @@ map<string, string> Config::Parse(vector<string> params)
 	{
 		if (line.find("//") == 0 || line.find("=") == std::string::npos)
 			continue;
-		if (line.find("PLAYSOUND") == 0)
+		else if (line.find("PLAYSOUND") == 0)
 		{
 			line = line.substr(line.find("=") + 1, line.length());
+			if (line.find("[") == std::string::npos)
+				Config::sceneSounds["all"]["all"] = line;
 			while (line.find("[") != std::string::npos)
 			{
 				int begScene = line.find("[");
 				int endScene = line.find("]");
 				if (begScene != std::string::npos && endScene != std::string::npos && endScene > begScene)
 				{
-					std::string scene = line.substr(begScene + 1, endScene - begScene - 1);
+					string toScene = line.substr(begScene + 1, endScene - begScene - 1);
 					line = line.substr(endScene + 1, line.length());
-					std::string sound = "";
+					string sound = "";
 					int endSound = line.find("[");
 					if (endSound == std::string::npos)
 						sound = line;
 					else
 						sound = line.substr(0, endSound);
-					Config::sceneSounds[scene] = sound;
+
+					string fromScene = "all";
+					if (toScene.find("->") != std::string::npos)
+					{
+						fromScene = toScene.substr(0, toScene.find("->"));
+						toScene = toScene.substr(toScene.find("->") + 2, toScene.length());
+					}
+
+					Config::sceneSounds[fromScene][toScene] = sound;
 				}
 				else
 					break;
@@ -40,9 +51,14 @@ map<string, string> Config::Parse(vector<string> params)
 
 			continue;
 		}
-		if (line.find("SELFSOUNDS") == 0)
+		else if (line.find("SELFSOUNDS") == 0)
 		{
 			Config::selfSounds = stoi(line.substr(line.find("=") + 1, line.length()));
+			continue;
+		}
+		else if (line.find("TRANSITIONPOINT") == 0)
+		{
+			Config::transitionPoint = stoi(line.substr(line.find("=") + 1, line.length()));
 			continue;
 		}
 		bool continuing = false;
