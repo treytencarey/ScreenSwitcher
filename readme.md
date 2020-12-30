@@ -7,6 +7,8 @@ ScreenSwitcher is a portable, easy-to-use application that allows one or more PC
   - Used primarily for **OBS Studio**, allowing people who stream together to both change OBS scenes and receieve audio feedback of scene changes.
   - Play any sound you want when a scene becomes active or inactive.
 
+See this program in action live by following our Twitch channel at [twitch.tv/4FeetApart](https://www.twitch.tv/4feetapart).
+
 # New Features!
 
   - Play sounds after a configured delay (TRANSITIONPOINT in config.ini).
