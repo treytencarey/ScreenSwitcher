@@ -50,24 +50,31 @@ Server::Server(int port)
 }
 
 map<string, int> triggers;
-int sensitivity = 3; // Must trigger at least this many times (GetAsyncKeyState bug that pressing then releasing 1 then pressing ctrl would still trigger but only once?)
+int sensitivity = 1; // Must trigger at least this many times (GetAsyncKeyState bug that pressing then releasing 1 then pressing ctrl would still trigger but only once?)
 void checkSwitchScene()
 {
-	map<string, vector<int> >::iterator it;
+	map<string, vector<vector<int>>>::iterator it;
 	for (it = Config::keyMap.begin(); it != Config::keyMap.end(); it++)
 	{
-		bool ok = true;
-		for (int key : it->second)
+		for (vector<int> keys : it->second)
 		{
-			if (!GetAsyncKeyState(key))
+			bool ok = true;
+			for (int key : keys)
 			{
-				ok = false;
-				triggers[it->first] = 0;
+				if (!GetAsyncKeyState(key))
+				{
+					ok = false;
+					break;
+				}
+			}
+			if (ok)
+			{
+				triggers[it->first]++;
 				break;
 			}
+			else
+				triggers[it->first] = 0;
 		}
-		if (ok)
-			triggers[it->first]++;
 		if (triggers[it->first] == sensitivity)
 		{
 			cout << "Changing scene: " << it->first << endl;

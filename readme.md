@@ -19,6 +19,7 @@ See this program in action live by following our Twitch channel at [twitch.tv/4F
   - Play sounds after a configured delay (TRANSITIONPOINT in config.ini).
   - Create new sound combinations by telling what sound should play when going from what scene to what scene (PLAYSOUND in config.ini).
   - Choose whether or not your own scene switches (not triggered by someone else) should also trigger sounds to play.
+  - You can now assign multiple hotkeys to the same scene. When the client(s) switch a scene, whichever hotkey for the same scene comes first is triggered.
 
 You can also:
   - Connect on any internet connection (local or remote).
@@ -32,6 +33,10 @@ Configuration is easy, and examples are already provided in the config.ini files
 > // Use keycodes from: https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes (leave as hex value, so 0x31 from the link is 31 below).\
 > // Hotkeys use '+' delimiters, so 11+31 means "press Shift and 1 at the same time". Give this action any name:\
 > Game Queue=11+31\
+> // Notice below that we have two of the same scene (Game - Trey).
+> //   Using the same scene twice allows us to use multiple hotkeys for a scene switch.
+> //   When someone else triggers a scene switch, whichever hotkey assigned FIRST is the one that is triggered on the host PC (in this case, DD which maps to key '[').
+> Game - Trey=DD\
 > Game - Trey=11+32\
 > Game - Nate=11+33\
 > // syntax: [sceneName]soundFile -> Plays the sound if the scene becomes active\

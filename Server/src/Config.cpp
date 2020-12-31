@@ -1,6 +1,6 @@
 #include "Config.h"
 
-map<string, vector<int>> Config::keyMap;
+map<string, vector<vector<int>>> Config::keyMap;
 map<string, map<string, string>> Config::sceneSounds; // EXAMPLE: if the config has PLAYSOUND=[Scene1]sound1[Scene1->Scene2]sound2, then this is ["all"]["Scene1"]=sound and ["Scene1"]["Scene2"]=sound2.
 bool Config::selfSounds = false;
 int Config::transitionPoint = 0;
@@ -97,7 +97,7 @@ map<string, string> Config::Parse(vector<string> params)
 		strstr >> hex >> hexKey;
 		keys.push_back(hexKey);
 
-		keyMap[key] = keys;
+		keyMap[key].push_back(keys);
 	}
 
 	return foundParams;

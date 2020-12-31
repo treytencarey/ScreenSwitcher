@@ -139,10 +139,10 @@
     <ClCompile Include="..\src\Server.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\includes\Client.h" />
-    <ClInclude Include="..\includes\Config.h" />
-    <ClInclude Include="..\includes\includes.h" />
-    <ClInclude Include="..\includes\Server.h" />
+    <ClInclude Include="..\include\Client.h" />
+    <ClInclude Include="..\include\Config.h" />
+    <ClInclude Include="..\include\includes.h" />
+    <ClInclude Include="..\include\Server.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

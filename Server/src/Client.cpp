@@ -63,7 +63,7 @@ void Client::switchScene(string name)
 	input.ki.wScan = 0;
 	input.ki.dwFlags = 0;
 
-	for (int key : Config::keyMap[name])
+	for (int key : Config::keyMap[name][0])
 	{
 		input.ki.wVk = key;
 		SendInput(1, &input, sizeof(INPUT));
@@ -72,9 +72,9 @@ void Client::switchScene(string name)
 	Sleep(150);
 
 	input.ki.dwFlags = KEYEVENTF_KEYUP;
-	for (int i = Config::keyMap[name].size() - 1; i >= 0; i--)
+	for (int i = Config::keyMap[name][0].size() - 1; i >= 0; i--)
 	{
-		int key = Config::keyMap[name][i];
+		int key = Config::keyMap[name][0][i];
 
 		input.ki.wVk = key;
 		SendInput(1, &input, sizeof(INPUT));
