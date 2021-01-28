@@ -20,6 +20,7 @@ See this program in action live by following our Twitch channel at [twitch.tv/4F
   - Create new sound combinations by telling what sound should play when going from what scene to what scene (PLAYSOUND in config.ini).
   - Choose whether or not your own scene switches (not triggered by someone else) should also trigger sounds to play.
   - You can now assign multiple hotkeys to the same scene. When the client(s) switch a scene, whichever hotkey for the same scene comes first is triggered.
+  - Multi-client support! Allow several people to all change scenes and keep them in sync, or connect a bot (like I did with Python) to listen for scene switches!
 
 You can also:
   - Connect on any internet connection (local or remote).
