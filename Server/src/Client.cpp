@@ -110,6 +110,11 @@ void Client::getMessages()
 	if (recvd > 0)
 	{
 		switchScene(msg);
+		for (Client* client : Server::clients)
+		{
+			if (client != this)
+				client->sendMessage(msg);
+		}
 	}
 
 	delete msg;

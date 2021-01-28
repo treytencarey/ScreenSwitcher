@@ -48,7 +48,7 @@ void switchScene(string name, bool selfCalled=false)
 }
 
 map<string, int> triggers;
-int sensitivity = 3; // Must trigger at least this many times (GetAsyncKeyState bug that pressing then releasing 1 then pressing ctrl would still trigger but only once?)
+int sensitivity = 1; // Must trigger at least this many times (GetKeyState bug that pressing then releasing 1 then pressing ctrl would still trigger but only once?)
 Server* server;
 void checkSwitchScene()
 {
@@ -60,7 +60,7 @@ void checkSwitchScene()
 			bool ok = true;
 			for (int key : keys)
 			{
-				if (!GetAsyncKeyState(key))
+				if (!(GetKeyState(key) & 0x8000))
 				{
 					ok = false;
 					break;
