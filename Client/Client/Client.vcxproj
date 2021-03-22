@@ -136,12 +136,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Server\src\Config.cpp" />
+    <ClCompile Include="..\..\Server\src\Operations.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\Server.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Config.h" />
     <ClInclude Include="..\include\includes.h" />
+    <ClInclude Include="..\include\Operations.h" />
     <ClInclude Include="..\include\Server.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

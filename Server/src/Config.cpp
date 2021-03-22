@@ -4,6 +4,8 @@ map<string, vector<vector<int>>> Config::keyMap;
 map<string, map<string, string>> Config::sceneSounds; // EXAMPLE: if the config has PLAYSOUND=[Scene1]sound1[Scene1->Scene2]sound2, then this is ["all"]["Scene1"]=sound and ["Scene1"]["Scene2"]=sound2.
 bool Config::selfSounds = false;
 int Config::transitionPoint = 0;
+int Config::pingTime = 45 * 1000;
+int Config::pongTime = 5 * 1000;
 
 map<string, string> Config::Parse(vector<string> params)
 {
@@ -79,23 +81,30 @@ map<string, string> Config::Parse(vector<string> params)
 		string keysStr = line.substr(line.find("=") + 1, line.length());
 
 		vector<int> keys;
-		while (keysStr.find("+") != std::string::npos)
+		if (keysStr.length())
 		{
-			string keyToHex = keysStr.substr(0, keysStr.find("+"));
+			while (keysStr.find("+") != std::string::npos)
+			{
+				string keyToHex = keysStr.substr(0, keysStr.find("+"));
+				int hexKey;
+				stringstream strstr;
+				strstr << keyToHex;
+				strstr >> hex >> hexKey;
+				keys.push_back(hexKey);
+
+				keysStr = keysStr.substr(keysStr.find("+") + 1, keysStr.length());
+			}
+			string keyToHex = keysStr;
 			int hexKey;
 			stringstream strstr;
 			strstr << keyToHex;
 			strstr >> hex >> hexKey;
 			keys.push_back(hexKey);
-
-			keysStr = keysStr.substr(keysStr.find("+") + 1, keysStr.length());
 		}
-		string keyToHex = keysStr;
-		int hexKey;
-		stringstream strstr;
-		strstr << keyToHex;
-		strstr >> hex >> hexKey;
-		keys.push_back(hexKey);
+		else
+		{
+			keys.push_back(-1);
+		}
 
 		keyMap[key].push_back(keys);
 	}

@@ -1,9 +1,23 @@
 #include "Client.h"
+#include "Operations.h"
+#include "Server.h"
+#include "Config.h"
+#include "winsock.h"
 
 Client::Client(int sock, int ID)
 {
 		this->sock = sock;
 		this->ID = ID;
+		this->sendPing(true,false);
+}
+
+Client::~Client()
+{
+	printf("Client %d disconnected.", this->ID);
+	int pos;
+	if ((pos = std::find(Server::clients.begin(), Server::clients.end(), this) - Server::clients.begin()) != Server::clients.size())
+		Server::clients.erase(Server::clients.begin() + pos);
+	closesocket(this->sock);
 }
 
 void playSound(string sound)
@@ -45,6 +59,15 @@ void Client::switchScenePlaySound(string name, bool selfCalled/*=false*/)
 			}
 		}
 	}
+}
+
+void Client::sendPing(bool setPong/*=true*/, bool sendToServer/*=true*/)
+{
+	this->ping = Operations::getTimeMilli() + Config::pingTime;
+	if (setPong)
+		this->pong = this->ping + Config::pongTime;
+	if (sendToServer)
+		this->sendMessage("PING");
 }
 
 void Client::switchScene(string name)
@@ -109,12 +132,21 @@ void Client::getMessages()
 	int recvd = recv(this->sock, msg, 255, 0); //Server::recvAll(this->sock, &msg, 255, 0);
 	if (recvd > 0)
 	{
-		switchScene(msg);
-		for (Client* client : Server::clients)
+		std::string message(msg);
+
+		if (message != "PONG")
 		{
-			if (client != this)
-				client->sendMessage(msg);
+			switchScene(msg);
+			for (Client* client : Server::clients)
+			{
+				if (client != this)
+					client->sendMessage(msg);
+			}
+			this->sendPing(true, false);
 		}
+		else
+			this->sendPing(true, false);
+		
 	}
 
 	delete msg;
@@ -124,6 +156,15 @@ void Client::sendMessages()
 {
 	u_long iMode = 1;
 	ioctlsocket(this->sock, FIONBIO, &iMode);
+
+	auto time = Operations::getTimeMilli();
+	if (this->pong < time)
+	{
+		delete this;
+		return;
+	}
+	if (this->ping < time)
+		this->sendPing(false);
 
 	for (string message : this->messages)
 	{

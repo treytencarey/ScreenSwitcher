@@ -1,4 +1,6 @@
 #include "Server.h"
+#include "Client.h"
+#include "Config.h"
 
 vector<Client*> Server::clients;
 
@@ -81,11 +83,12 @@ void checkSwitchScene()
 
 			if (Server::clients.size())
 				Server::clients[0]->switchScenePlaySound(it->first, true);
-			for (Client* client : Server::clients)
-			{
+			for (int ID = Server::clients.size() - 1; ID >= 0; ID--) {
+				Client* client = Server::clients[ID];
+				
 				client->sendMessage(it->first);
-				client->sendMessages();
 				client->currentScene = it->first;
+				client->sendMessages();
 			}
 		}
 	}
@@ -99,8 +102,10 @@ void Server::Connection(int threadID)
 		Sleep(10);
 		checkSwitchScene();
 		for (int ID = Server::clients.size() - 1; ID >= 0; ID--) {
-			Server::clients[ID]->getMessages();
-			Server::clients[ID]->sendMessages();
+			Client* client = Server::clients[ID];
+			
+			client->getMessages();
+			client->sendMessages();
 		}
 	}
 }

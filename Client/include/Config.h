@@ -12,4 +12,6 @@ public:
 	static map<string, map<string, string>> sceneSounds;
 	static bool selfSounds;
 	static int transitionPoint;
+	static int pingTime; // Time until a ping is sent out
+	static int pongTime; // Time until a pong is required after a ping
 };

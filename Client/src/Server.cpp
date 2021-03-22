@@ -26,25 +26,31 @@ Server::Server(string ip, int port)
 
 	fd_set fd;
 
-	FD_ZERO(&fd);
-	FD_SET(sock, &fd);
-
-	u_long iMode = 1;
-	ioctlsocket(sock, FIONBIO, &iMode);
-
-	res = connect(sock, &addr, sizeof(addr));
-
-	struct timeval timeout;
-	timeout.tv_sec = 3;
-	timeout.tv_usec = 0;
-
-	/* Wait for write bit to be set */
-	if (select(FD_SETSIZE, 0, &fd, 0, &timeout) <= 0)
+	bool cont = true;
+	while (cont)
 	{
-		this->online = true;
-		cout << "Connection Failed. Try again." << endl;
-		system("pause");
-		exit(0);
+		FD_ZERO(&fd);
+		FD_SET(sock, &fd);
+
+		u_long iMode = 1;
+		ioctlsocket(sock, FIONBIO, &iMode);
+
+		res = connect(sock, &addr, sizeof(addr));
+
+		struct timeval timeout;
+		timeout.tv_sec = 5;
+		timeout.tv_usec = 0;
+
+		cont = false;
+		/* Wait for write bit to be set */
+		if (select(FD_SETSIZE, 0, &fd, 0, &timeout) <= 0)
+		{
+			this->online = true;
+			cont = true;
+			// cout << "Connection Failed. Try again." << endl;
+			// system("pause");
+			// exit(0);
+		}
 	}
 	cout << "Connection success!" << endl;
 }

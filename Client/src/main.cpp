@@ -1,4 +1,5 @@
 #include "includes.h"
+#include "Operations.h"
 
 void playSound(string sound)
 {
@@ -14,6 +15,36 @@ void switchScene(string name, bool selfCalled=false)
 	}
 
 	cout << "Changing scene: " << name << endl;
+
+	if (!selfCalled &&
+		Config::keyMap.find(name) != Config::keyMap.end() && Config::keyMap[name].size() && Config::keyMap[name][0].size() && Config::keyMap[name][0][0] != -1) // Ensure that we only simulate a press if the first config for a scene is not blank
+	{
+		// https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
+		INPUT input;
+		input.type = INPUT_KEYBOARD;
+		input.ki.time = 0;
+		input.ki.dwExtraInfo = 0;
+		input.ki.wScan = 0;
+		input.ki.dwFlags = 0;
+
+		for (int key : Config::keyMap[name][0])
+		{
+			input.ki.wVk = key;
+			SendInput(1, &input, sizeof(INPUT));
+		}
+
+		Sleep(150);
+
+		input.ki.dwFlags = KEYEVENTF_KEYUP;
+		for (int i = Config::keyMap[name][0].size() - 1; i >= 0; i--)
+		{
+			int key = Config::keyMap[name][0][i];
+
+			input.ki.wVk = key;
+			SendInput(1, &input, sizeof(INPUT));
+		}
+	}
+
 	// PLAY SOUND
 	if (currentScene != name && (!selfCalled || Config::selfSounds))
 	{
@@ -60,7 +91,7 @@ void checkSwitchScene()
 			bool ok = true;
 			for (int key : keys)
 			{
-				if (!(GetKeyState(key) & 0x8000))
+				if (key != -1 && !(GetKeyState(key) & 0x8000))
 				{
 					ok = false;
 					break;
@@ -93,13 +124,28 @@ int main()
 
 	server = new Server(ip, port);
 
+	long long ping = Operations::getTimeMilli() + Config::pingTime + Config::pongTime;
+
 	while (true) {
 		Sleep(10);
+
+		if (Operations::getTimeMilli() > ping)
+		{
+			printf("ERROR: LOST CONNECTION. Reconnecting...\n");
+			server = new Server(ip, port);
+			ping = Operations::getTimeMilli() + Config::pingTime + Config::pongTime;
+		}
 
 		vector<string> messages = server->getMessages();
 		for (string message : messages)
 		{
-			switchScene(message);
+			if (message == "PING")
+			{
+				server->sendStr("PONG");
+			}
+			else
+				switchScene(message);
+			ping = Operations::getTimeMilli() + Config::pingTime + Config::pongTime;
 		}
 
 		checkSwitchScene();
