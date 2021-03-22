@@ -6,6 +6,11 @@ ScreenSwitcher is a portable, easy-to-use application that allows one or more PC
   - Hotkeys send to connected PC, pressing corresponding hotkey.
   - Used primarily for **OBS Studio**, allowing people who stream together to both change OBS scenes and receieve audio feedback of scene changes.
   - Play any sound you want when a scene becomes active or inactive.
+  - Play sounds after a configured delay (TRANSITIONPOINT in config.ini).
+  - Create new sound combinations by telling what sound should play when going from what scene to what scene (PLAYSOUND in config.ini).
+  - Choose whether or not your own scene switches (not triggered by someone else) should also trigger sounds to play.
+  - You can now assign multiple hotkeys to the same scene. When the client(s) switch a scene, whichever hotkey for the same scene comes first is triggered.
+  - Multi-client support! Allow several people to all change scenes and keep them in sync, or connect a bot (like I did with Python) to listen for scene switches!
 
 See this program in action live by following our Twitch channel at [twitch.tv/4FeetApart](https://www.twitch.tv/4feetapart).
 
@@ -16,11 +21,12 @@ See this program in action live by following our Twitch channel at [twitch.tv/4F
 
 # New Features!
 
-  - Play sounds after a configured delay (TRANSITIONPOINT in config.ini).
-  - Create new sound combinations by telling what sound should play when going from what scene to what scene (PLAYSOUND in config.ini).
-  - Choose whether or not your own scene switches (not triggered by someone else) should also trigger sounds to play.
-  - You can now assign multiple hotkeys to the same scene. When the client(s) switch a scene, whichever hotkey for the same scene comes first is triggered.
-  - Multi-client support! Allow several people to all change scenes and keep them in sync, or connect a bot (like I did with Python) to listen for scene switches!
+ - No more waiting for the server before opening the client!
+   - Client will wait for the server before connecting automatically.
+   - If client loses connection, will also try reconnecting. 
+   - When client connection no longer available, server now clears the resources used by the client.
+ - Client key simulation! Similar to the server, the client now simulates key presses for configured scenes. Don't want key presses? Set the first scene value to blank ("Scene=").
+   - We ran into a problem sharing 2 screens at the same time where one screen's mic audio was broadcasting, and the second screen's audio was also broadcasting that mic so it was echoing. This will allow (un)muting the mic in OBS when the scenes change.
 
 You can also:
   - Connect on any internet connection (local or remote).
